@@ -1,5 +1,5 @@
 require 'sinatra'
-require 'sinatra/reloader'
+require 'sinatra/reloader' if development?
 require 'sinatra/content_for'
 require 'tilt/erubis'
 
@@ -15,7 +15,7 @@ helpers do
   end
 
   def list_class(list)
-    "complete" if list_complete?(list)
+    'complete' if list_complete?(list)
   end
 
   def todos_count(list)
@@ -37,7 +37,6 @@ helpers do
     incomplete_todos.each { |todo| yield todo, todos.index(todo) }
     complete_todos.each { |todo| yield todo, todos.index(todo) }
   end
-
 end
 
 before do
@@ -138,14 +137,14 @@ post '/lists/:list_id/todos' do
     session[:error] = error
     erb :list, layout: :layout
   else
-    @list[:todos] << {name: text, completed: false}
+    @list[:todos] << { name: text, completed: false }
     session[:success] = 'The todo was added.'
     redirect "/lists/#{@list_id}"
   end
 end
 
 # Delete a todo from a list
-post "/lists/:list_id/todos/:id/destroy" do
+post '/lists/:list_id/todos/:id/destroy' do
   @list_id = params[:list_id].to_i
   @list = session[:lists][@list_id]
 
@@ -156,20 +155,19 @@ post "/lists/:list_id/todos/:id/destroy" do
 end
 
 # Update the status of a todo
-post "/lists/:list_id/todos/:id" do
+post '/lists/:list_id/todos/:id' do
   @list_id = params[:list_id].to_i
   @list = session[:lists][@list_id]
 
   todo_id = params[:id].to_i
-  is_completed = params[:completed] == "true"
+  is_completed = params[:completed] == 'true'
 
   @list[:todos][todo_id][:completed] = is_completed
   session[:success] = 'The todo has been updated.'
   redirect "/lists/#{@list_id}"
 end
 
-
-post "/lists/:id/complete_all" do
+post '/lists/:id/complete_all' do
   @list_id = params[:id].to_i
   @list = session[:lists][@list_id]
 
