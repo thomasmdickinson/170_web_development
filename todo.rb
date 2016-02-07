@@ -162,8 +162,9 @@ post '/lists/:list_id/todos/:id/destroy' do
 
   todo_id = params[:id].to_i
   @list[:todos].delete_at(todo_id)
-  session[:success] = 'The todo has been deleted.'
-  redirect "/lists/#{@list_id}"
+  # session[:success] = 'The todo has been deleted.'
+  # redirect "/lists/#{@list_id}"
+  "OK"
 end
 
 # Update the status of a todo
